@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("IMAGE_RES_IDS", imageResIds)
         startActivity(intent)
     }
+
 
 
 
@@ -56,12 +58,23 @@ class MainActivity : AppCompatActivity() {
             openDetail("眼睛痠痛", "按摩方式：用中指輕壓並做深呼吸",intArrayOf(R.drawable.eye_1, R.drawable.eye_2,R.drawable.eye_3,R.drawable.eye_4, R.drawable.eye_5,R.drawable.eye_6))
         }
 
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-
-
-        findViewById<Button>(R.id.button16).setOnClickListener {
-            openDetail("還沒做好", "還沒還沒還沒還沒還沒", intArrayOf(R.drawable.side))
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.menu_home -> {
+                    // 可以保持目前頁面，不用跳轉
+                    true
+                }
+                R.id.menu_record -> {
+                    val intent = Intent(this, RecordActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                else -> false
+            }
         }
+
     }
 }
 

@@ -1,9 +1,19 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.EndOfTerm" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+    <!-- 基礎主題，啟用 ActionBar -->
+    <style name="Base.Theme.EndOfTerm" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- ActionBar 背景顏色 -->
+        <item name="colorPrimary">#003366</item>
+        <item name="colorPrimaryVariant">#002244</item>
+
+        <!-- 設定狀態列背景顏色（可選） -->
+        <item name="android:statusBarColor">#002244</item>
+
+        <!-- ActionBar 返回箭頭、字體顏色 -->
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:colorControlNormal">#FFFFFF</item>
     </style>
 
+    <!-- 應用主題繼承這個 -->
     <style name="Theme.EndOfTerm" parent="Base.Theme.EndOfTerm" />
 </resources>

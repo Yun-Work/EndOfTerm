@@ -6,24 +6,24 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
-class ImageAdapter(private val imageResIds: IntArray) :
-    RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
+class ImageAdapter(private val imageResIds: IntArray) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
-    class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: ImageView = view.findViewById(R.id.imageView)
-    }
+    class ImageViewHolder(val imageView: ImageView) : RecyclerView.ViewHolder(imageView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_image, parent, false)
-        return ImageViewHolder(view)
+        val imageView = ImageView(parent.context).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            scaleType = ImageView.ScaleType.CENTER_CROP
+        }
+        return ImageViewHolder(imageView)
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         holder.imageView.setImageResource(imageResIds[position])
-//        Log.d("ImageAdapter", "Binding image at position $position")
-
     }
 
-    override fun getItemCount(): Int = imageResIds.size
+    override fun getItemCount() = imageResIds.size
 }
