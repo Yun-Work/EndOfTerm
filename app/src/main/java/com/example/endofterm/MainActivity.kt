@@ -31,31 +31,31 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(
             R.id.btn1).setOnClickListener {
-            openDetail("後側頭痛", "按摩方式：雙手拇指按壓 10 秒、重複 5 次\n禁忌：高血壓患者需注意力道",intArrayOf(R.drawable.back_1_front, R.drawable.back_2))
+            openDetail("後側頭痛", "按摩穴道:百會穴、風池穴\n按摩方式：雙手拇指按壓 10 秒、重複 5 次\n禁忌：高血壓患者需注意力道",intArrayOf(R.drawable.back_1_front, R.drawable.back_2))
         }
 
         findViewById<Button>(R.id.btn2).setOnClickListener {
-            openDetail("側面頭痛", "按摩方式：食指按壓，並輕揉 30 秒", intArrayOf(R.drawable.side))
+            openDetail("側面頭痛", "按摩穴道:率谷穴\n按摩方式：食指按壓，並輕揉 30 秒", intArrayOf(R.drawable.side))
         }
 
         findViewById<Button>(R.id.btn3).setOnClickListener {
-            openDetail("前額頭痛", "按摩方式：指腹按壓、畫圓按摩 1 分鐘", intArrayOf(R.drawable.back_1_front, R.drawable.front_1,R.drawable.front_2))
+            openDetail("前額頭痛", "按摩穴道:神庭穴、頭維穴、上星\n按摩方式：指腹按壓、畫圓按摩 1 分鐘", intArrayOf(R.drawable.front_3, R.drawable.front_1,R.drawable.front_2))
         }
 
         findViewById<Button>(R.id.btn4).setOnClickListener {
-            openDetail("頭暈", "按摩方式：指壓 + 呼吸調節", intArrayOf(R.drawable.dizzy_1, R.drawable.dizzy_2,R.drawable.dizzy_3))
+            openDetail("頭暈", "按摩穴道:風池穴、神庭穴、率谷穴\n按摩方式：指壓 + 呼吸調節", intArrayOf(R.drawable.dizzy_1, R.drawable.dizzy_2,R.drawable.dizzy_3))
         }
 
         findViewById<Button>(R.id.btn5).setOnClickListener {
-            openDetail("淡化黑眼圈", "按摩方式：每天早晚各按 1~2 分鐘", intArrayOf(R.drawable.dark_1, R.drawable.dark_2,R.drawable.dark_3,R.drawable.dark_4))
+            openDetail("淡化黑眼圈", "按摩穴道:印堂穴、魚腰穴、晴明穴、攢竹穴\n按摩方式：每天早晚各按 1~2 分鐘", intArrayOf(R.drawable.dark_1, R.drawable.dark_2,R.drawable.dark_3,R.drawable.dark_4))
         }
 
         findViewById<Button>(R.id.btn6).setOnClickListener {
-            openDetail("改善失眠", "按摩方式：睡前溫和按摩穴道", intArrayOf(R.drawable.sleep_1, R.drawable.sleep_2))
+            openDetail("改善失眠", "按摩穴道:百會穴、風池穴\n按摩方式：睡前溫和按摩穴道", intArrayOf(R.drawable.sleep_1, R.drawable.sleep_2))
         }
 
         findViewById<Button>(R.id.btn7).setOnClickListener {
-            openDetail("眼睛痠痛", "按摩方式：用中指輕壓並做深呼吸",intArrayOf(R.drawable.eye_1, R.drawable.eye_2,R.drawable.eye_3,R.drawable.eye_4, R.drawable.eye_5,R.drawable.eye_6))
+            openDetail("眼睛痠痛", "按摩穴道:承泣穴、魚腰穴、晴明穴、絲竹空穴、瞳子膠穴、攢竹穴\n按摩方式：用中指輕壓並做深呼吸",intArrayOf(R.drawable.eye_1, R.drawable.eye_2,R.drawable.eye_3,R.drawable.eye_4, R.drawable.eye_5,R.drawable.eye_6))
         }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
