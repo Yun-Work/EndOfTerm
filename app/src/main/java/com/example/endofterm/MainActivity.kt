@@ -2,14 +2,17 @@ package com.example.endofterm
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import android.widget.Button
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import okhttp3.*
+import org.json.JSONObject
+import java.io.IOException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,16 +25,50 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    private fun sendSymptomLogToServer(symptomName: String) {
+        val url = "http://10.0.2.2:5000/api/symptoms"
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        val today = LocalDate.now().format(formatter)
+
+        val json = JSONObject().apply {
+            put("name", symptomName)
+            put("date", today)
+        }
+
+        val requestBody = json.toString()
+            .toRequestBody("application/json; charset=utf-8".toMediaType())
 
 
+        val request = Request.Builder()
+            .url(url)
+            .post(requestBody)
+            .build()
+
+        val client = OkHttpClient()
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("MainActivity", "POST 失敗", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.d("MainActivity", "POST 成功：${response.body?.string()}")
+                } else {
+                    Log.e("MainActivity", "POST 錯誤：${response.code}")
+                }
+
+            }
+        })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<Button>(
-            R.id.btn1).setOnClickListener {
-            openDetail("後側頭痛", "按摩穴道:百會穴、風池穴\n\n" +
+        findViewById<Button>(R.id.btn1).setOnClickListener {
+            val name = "後側頭痛"
+            sendSymptomLogToServer(name)
+            openDetail(name, "按摩穴道:百會穴、風池穴\n\n" +
                     "1.百會穴:\n" +
                     "☝穴道位置：將兩耳尖高點向上連成一線，與鼻頭向上延伸的交會處。\n" +
                     "✌按摩方法：以拇指指腹 輕按，按壓5秒後停1秒 為1次，連續按壓7次。\n" +
@@ -42,6 +79,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn2).setOnClickListener {
+            val name = "側面頭痛"
+            sendSymptomLogToServer(name)
             openDetail("側面頭痛", "按摩穴道:率谷穴\n\n率谷穴:\n" +
                     "☝穴道位置：找到耳尖位置，向上兩手指寬處。 \n" +
                     "✌按摩方法：頭痛期間以手指指腹按壓5秒後停 1秒為1次，連續按壓7 次。\n" +
@@ -49,14 +88,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn3).setOnClickListener {
-            openDetail("前額頭痛", "按摩穴道:神庭穴、頭維穴、上星\n\n頭維穴:\n" +
+            val name = "前額頭痛"
+            sendSymptomLogToServer(name)
+            openDetail(name, "按摩穴道:神庭穴、頭維穴、上星\n\n頭維穴:\n" +
                     "☝穴道位置：頭側部，額角髮際上0.5寸，頭正中線旁4.5寸。 \n" +
                     "✌按摩方法：中指指腹輕揉迴旋按摩，力度適中，不是深力度按壓，每次施治時間1～3分 鐘，每日2～3次。 \n" +
                     "✔功效：瀉火止痛、緩解 疲勞。\n", intArrayOf(R.drawable.front_3, R.drawable.front_1,R.drawable.front_2))
         }
 
         findViewById<Button>(R.id.btn4).setOnClickListener {
-            openDetail("頭暈", "按摩穴道:風池穴、神庭穴、率谷穴\n\n率谷穴:\n" +
+            val name = "頭暈"
+            sendSymptomLogToServer(name)
+            openDetail(name, "按摩穴道:風池穴、神庭穴、率谷穴\n\n率谷穴:\n" +
                     "☝穴道位置：找到耳尖位置，向上兩手指寬處。 \n" +
                     "✌按摩方法：用雙手的中指指腹按壓在率谷穴上，按壓3-5分鐘。\n" +
                     "✔功效：緩解頭暈、眩暈。\n\n" +
@@ -74,7 +117,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn5).setOnClickListener {
-            openDetail("淡化黑眼圈", "按摩穴道:印堂穴、魚腰穴、晴明穴、攢竹穴\n\n魚腰穴:\n" +
+            val name = "淡化黑眼圈"
+            sendSymptomLogToServer(name)
+            openDetail(name, "按摩穴道:印堂穴、魚腰穴、晴明穴、攢竹穴\n\n魚腰穴:\n" +
                     "☝穴道位置： 位於眉毛中央\n" +
                     "✌按摩方法：用指關節順時針輕輕按壓5圈，重覆20-30次。\n" +
                     "✔功效：鎮驚安神、疏風通絡\n\n" +
@@ -93,7 +138,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn6).setOnClickListener {
-            openDetail("改善失眠", "按摩穴道:百會穴、風池穴\n\n百會穴:\n" +
+            val name = "改善失眠"
+            sendSymptomLogToServer(name)
+            openDetail(name, "按摩穴道:百會穴、風池穴\n\n百會穴:\n" +
                     "☝穴道位置： 頭頂正中央，從兩耳耳尖延伸向上與頭部正中線交叉處。\n" +
                     "✌按摩方法：以拇指按壓失眠穴位，也可用手掌心揉壓頭頂頭皮，並以順時針、逆時針方向輪流按摩，每次按摩1分鐘。\n" +
                     "✔功效：氣血循環，具有安神、緩減緊張、延年益壽、促進新陳代謝功效。\n\n" +
@@ -104,7 +151,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btn7).setOnClickListener {
-            openDetail("眼睛痠痛", "按摩穴道:承泣穴、魚腰穴、晴明穴、絲竹空穴、瞳子膠穴、攢竹穴\n\n攢竹穴:\n" +
+            val name = "眼睛痠痛"
+            sendSymptomLogToServer(name)
+            openDetail(name, "按摩穴道:承泣穴、魚腰穴、晴明穴、絲竹空穴、瞳子膠穴、攢竹穴\n\n攢竹穴:\n" +
                     "☝穴道位置： 眉頭\n" +
                     "✌按摩方法：使用雙手大拇指指腹按壓攢竹穴 3～5 秒，再放鬆，重複按壓數次。\n" +
                     "✔功效：明目醒腦，改善目眩刺痛，還有眼皮跳動的不舒服。\n\n" +
@@ -114,7 +163,9 @@ class MainActivity : AppCompatActivity() {
                     "✔功效：改善眼睛疲勞、頭痛。\n\n" +
                     "絲竹空穴:\n" +
                     "☝穴道位置： 眉尾\n" +
-                    "✌按摩方法：以指腹順時針與逆時針各按摩 10 次，早晚各一次。\n" +
+                    "" +
+                    "" +
+                    "按摩方法：以指腹順時針與逆時針各按摩 10 次，早晚各一次。\n" +
                     "✔功效：明目止痛，改善偏頭痛。\n\n" +
                     "瞳子膠穴:\n" +
                     "☝穴道位置： 眼尾\n" +
@@ -131,13 +182,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.menu_home -> {
-                    // 可以保持目前頁面，不用跳轉
-                    true
-                }
+                R.id.menu_home -> true
                 R.id.menu_record -> {
                     val intent = Intent(this, RecordActivity::class.java)
                     startActivity(intent)
@@ -146,10 +193,5 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
     }
 }
-
-
-
-

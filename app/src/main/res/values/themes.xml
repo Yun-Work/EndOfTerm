@@ -16,4 +16,13 @@
 
     <!-- 應用主題繼承這個 -->
     <style name="Theme.EndOfTerm" parent="Base.Theme.EndOfTerm" />
+
+    <!-- 👉 給 MainActivity 專用的 NoActionBar 主題 -->
+    <style name="Theme.EndOfTerm.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#003366</item>
+        <item name="colorPrimaryVariant">#002244</item>
+        <item name="android:statusBarColor">#002244</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:colorControlNormal">#FFFFFF</item>
+    </style>
 </resources>
