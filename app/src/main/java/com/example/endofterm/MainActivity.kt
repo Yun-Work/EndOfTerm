@@ -90,16 +90,16 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btn3).setOnClickListener {
             val name = "前額頭痛"
             sendSymptomLogToServer(name)
-            openDetail(name, "按摩穴道:神庭穴、頭維穴、上星\n\n頭維穴:\n" +
+            openDetail(name, "按摩穴道:頭維穴\n\n頭維穴:\n" +
                     "☝穴道位置：頭側部，額角髮際上0.5寸，頭正中線旁4.5寸。 \n" +
                     "✌按摩方法：中指指腹輕揉迴旋按摩，力度適中，不是深力度按壓，每次施治時間1～3分 鐘，每日2～3次。 \n" +
-                    "✔功效：瀉火止痛、緩解 疲勞。\n", intArrayOf(R.drawable.front_3, R.drawable.front_1,R.drawable.front_2))
+                    "✔功效：瀉火止痛、緩解 疲勞。\n", intArrayOf( R.drawable.front_1))
         }
 
         findViewById<Button>(R.id.btn4).setOnClickListener {
             val name = "頭暈"
             sendSymptomLogToServer(name)
-            openDetail(name, "按摩穴道:風池穴、神庭穴、率谷穴\n\n率谷穴:\n" +
+            openDetail(name, "按摩穴道:風池穴、神庭穴、率谷穴、翳風穴\n\n率谷穴:\n" +
                     "☝穴道位置：找到耳尖位置，向上兩手指寬處。 \n" +
                     "✌按摩方法：用雙手的中指指腹按壓在率谷穴上，按壓3-5分鐘。\n" +
                     "✔功效：緩解頭暈、眩暈。\n\n" +
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                     "翳風穴:\n" +
                     "☝穴道位置： 耳垂後，乳突與下頜骨間的凹陷處。\n" +
                     "✌按摩方法：用拇指指腹，小幅度旋轉畫圈揉動，按摩 3 – 5 分鐘。\n" +
-                    "✔功效：調整內耳的平衡，減輕頭暈不適", intArrayOf(R.drawable.dizzy_1, R.drawable.dizzy_2,R.drawable.dizzy_3))
+                    "✔功效：調整內耳的平衡，減輕頭暈不適", intArrayOf(R.drawable.dizzy_1, R.drawable.dizzy_2,R.drawable.dizzy_3,R.drawable.dizzy_new))
         }
 
         findViewById<Button>(R.id.btn5).setOnClickListener {
