@@ -2,6 +2,8 @@ package com.example.endofterm
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
@@ -13,17 +15,19 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.formatter.ValueFormatter
 import okhttp3.*
 import org.json.JSONArray
 import java.io.IOException
-import java.util.Calendar
-import com.example.endofterm.SymptomSummary
-
+import java.util.*
 
 class RecordActivity : AppCompatActivity() {
 
     private val client = OkHttpClient()
     private lateinit var barChart: BarChart
+    private lateinit var spinnerYear: Spinner
+    private lateinit var spinnerMonth: Spinner
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,31 +37,42 @@ class RecordActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.title = ""
 
-        val spinnerYear: Spinner = findViewById(R.id.spinner_year)
-        val spinnerMonth: Spinner = findViewById(R.id.spinner_month)
+        spinnerYear = findViewById(R.id.spinner_year)
+        spinnerMonth = findViewById(R.id.spinner_month)
         barChart = findViewById(R.id.barChart)
+        recyclerView = findViewById(R.id.recyclerView_symptoms)
+        recyclerView.layoutManager = LinearLayoutManager(this)
 
         val yearList = (2020..2050).map { it.toString() }
         val monthList = (1..12).map { String.format("%02d", it) }
 
-        val yearAdapter = ArrayAdapter(this, R.layout.spinner_item, yearList)
-        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerYear.adapter = yearAdapter
+        spinnerYear.adapter = ArrayAdapter(this, R.layout.spinner_item, yearList)
+        spinnerMonth.adapter = ArrayAdapter(this, R.layout.spinner_item, monthList)
 
-        val monthAdapter = ArrayAdapter(this, R.layout.spinner_item, monthList)
-        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerMonth.adapter = monthAdapter
-
-        val currentYear = Calendar.getInstance().get(Calendar.YEAR).toString()
-        val currentMonth = String.format("%02d", Calendar.getInstance().get(Calendar.MONTH) + 1)
+        val calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR).toString()
+        val currentMonth = String.format("%02d", calendar.get(Calendar.MONTH) + 1)
 
         spinnerYear.setSelection(yearList.indexOf(currentYear))
         spinnerMonth.setSelection(monthList.indexOf(currentMonth))
 
-        fetchSymptomSummary()
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView_symptoms)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val updateData: () -> Unit = {
+            val selectedYear = spinnerYear.selectedItem.toString().toInt()
+            val selectedMonth = spinnerMonth.selectedItem.toString().toInt()
+            fetchSymptomSummary(selectedYear, selectedMonth)
+            fetchSymptomLog(selectedYear, selectedMonth)
+        }
 
+        spinnerYear.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) = updateData()
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+        spinnerMonth.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) = updateData()
+            override fun onNothingSelected(parent: AdapterView<*>) {}
+        }
+
+        updateData()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -65,76 +80,110 @@ class RecordActivity : AppCompatActivity() {
         return true
     }
 
-    private fun fetchSymptomSummary() {
+    private fun fetchSymptomSummary(year: Int, month: Int) {
         val request = Request.Builder()
-            .url("http://10.0.2.2:5000/api/symptoms/summary")
+            .url("https://d550-2001-b011-4004-9252-94dc-aa65-49de-7de5.ngrok-free.app/api/symptoms/summary?year=$year&month=$month")
             .get()
             .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                runOnUiThread {
-                    Log.e("RecordActivity", "GET 失敗", e)
-                }
+                runOnUiThread { Log.e("RecordActivity", "GET summary 失敗", e) }
             }
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val body = response.body?.string()
-                    val summaryList = mutableListOf<SymptomSummary>()
-
+                    val list = mutableListOf<SymptomSummary>()
                     val jsonArray = JSONArray(body)
+
                     for (i in 0 until jsonArray.length()) {
                         val obj = jsonArray.getJSONObject(i)
-                        val name = obj.getString("name")
-                        val count = obj.getInt("count")
-                        summaryList.add(SymptomSummary(name, count))
+                        list.add(SymptomSummary(obj.getString("name"), obj.getInt("count")))
                     }
 
                     runOnUiThread {
-                        Log.d("RecordActivity", "取得成功：$summaryList")
-                        drawBarChart(summaryList)
-
-                        val recyclerView: RecyclerView = findViewById(R.id.recyclerView_symptoms)
-                        recyclerView.adapter = SymptomSummaryAdapter(summaryList)
+                        drawBarChart(list)
                     }
                 } else {
-                    Log.e("RecordActivity", "GET 錯誤：${response.code}")
+                    Log.e("RecordActivity", "GET summary 錯誤：${response.code}")
                 }
             }
         })
     }
 
-    private fun drawBarChart(symptomList: List<SymptomSummary>) {
-        val entries = symptomList.mapIndexed { index, symptom ->
-            BarEntry(index.toFloat(), symptom.count.toFloat())
+    private fun fetchSymptomLog(year: Int, month: Int) {
+        val request = Request.Builder()
+            .url("https://d550-2001-b011-4004-9252-94dc-aa65-49de-7de5.ngrok-free.app/api/symptoms/logs?year=$year&month=$month")
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread { Log.e("RecordActivity", "GET logs 失敗", e) }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val body = response.body?.string()
+                    val logList = mutableListOf<SymptomLogItem>()
+                    val jsonArray = JSONArray(body)
+
+                    for (i in 0 until jsonArray.length()) {
+                        val obj = jsonArray.getJSONObject(i)
+                        logList.add(SymptomLogItem(obj.getString("date"), obj.getString("name")))
+                    }
+
+                    runOnUiThread {
+                        recyclerView.adapter = SymptomLogAdapter(logList)
+                    }
+                }
+            }
+        })
+    }
+
+    private fun drawBarChart(list: List<SymptomSummary>) {
+        val entries = list.mapIndexed { i, item -> BarEntry(i.toFloat(), item.count.toFloat()) }
+
+        val dataSet = BarDataSet(entries, "症狀次數").apply {
+            valueTextSize = 16f
+            color = resources.getColor(R.color.teal_200, theme)
+            setDrawValues(true)
+            valueFormatter = object : ValueFormatter() {
+                override fun getBarLabel(entry: BarEntry?): String = String.format("%.0f", entry?.y ?: 0f)
+            }
         }
 
-        val dataSet = BarDataSet(entries, "症狀次數")
-        dataSet.valueTextSize = 16f
-        dataSet.color = resources.getColor(R.color.teal_200, theme)
+        barChart.data = BarData(dataSet).apply { barWidth = 0.6f }
 
-        val barData = BarData(dataSet)
-        barData.barWidth = 0.6f  // 👉 加這行讓 bar 寬一些
-        barChart.data = barData
+        barChart.xAxis.apply {
+            valueFormatter = IndexAxisValueFormatter(list.map { it.name })
+            position = XAxis.XAxisPosition.BOTTOM
+            granularity = 1f
+            setDrawGridLines(false)
+            labelRotationAngle = 0f
+            textSize = 16f
+            labelCount = list.size
+        }
 
-        val xAxis = barChart.xAxis
-        xAxis.valueFormatter = IndexAxisValueFormatter(symptomList.map { it.name })
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.granularity = 1f
-        xAxis.setDrawGridLines(false)
-        xAxis.labelRotationAngle = -75f
-        xAxis.textSize = 12f
-        xAxis.labelCount = symptomList.size
+        barChart.axisLeft.apply {
+            textSize = 14f
+            granularity = 1f
+            setLabelCount(5, false)
+            axisMinimum = 0f
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String = value.toInt().toString()
+            }
+        }
 
-        barChart.axisLeft.textSize = 14f
         barChart.axisRight.isEnabled = false
         barChart.description.isEnabled = false
+        barChart.legend.isEnabled = false
+        barChart.setViewPortOffsets(30f, 10f, 30f, 70f)
         barChart.setFitBars(true)
-        barChart.setVisibleXRangeMaximum(3f) // 👉 每次只顯示3條
-        barChart.moveViewToX(0f)             // 👉 初始位置從左邊開始
+        barChart.setVisibleXRangeMaximum(3f)
+        barChart.moveViewToX(0f)
         barChart.animateY(1000)
         barChart.invalidate()
     }
-
 }
