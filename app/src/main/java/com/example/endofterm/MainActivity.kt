@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendSymptomLogToServer(symptomName: String) {
-        val url = "https://d550-2001-b011-4004-9252-94dc-aa65-49de-7de5.ngrok-free.app/api/symptoms"
+        val url = "${Constants.BASE_URL}/api/symptoms"
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val today = LocalDate.now().format(formatter)
 

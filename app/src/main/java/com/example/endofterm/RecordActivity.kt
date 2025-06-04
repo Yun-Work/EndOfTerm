@@ -82,7 +82,7 @@ class RecordActivity : AppCompatActivity() {
 
     private fun fetchSymptomSummary(year: Int, month: Int) {
         val request = Request.Builder()
-            .url("https://d550-2001-b011-4004-9252-94dc-aa65-49de-7de5.ngrok-free.app/api/symptoms/summary?year=$year&month=$month")
+            .url("${Constants.BASE_URL}/api/symptoms/summary?year=$year&month=$month")
             .get()
             .build()
 
@@ -114,7 +114,7 @@ class RecordActivity : AppCompatActivity() {
 
     private fun fetchSymptomLog(year: Int, month: Int) {
         val request = Request.Builder()
-            .url("https://d550-2001-b011-4004-9252-94dc-aa65-49de-7de5.ngrok-free.app/api/symptoms/logs?year=$year&month=$month")
+            .url("${Constants.BASE_URL}/api/symptoms/logs?year=$year&month=$month")
             .get()
             .build()
 

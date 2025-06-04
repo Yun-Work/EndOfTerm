@@ -23,15 +23,15 @@
         android:id="@+id/btn1"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#6495ED"
         android:text="後側頭痛"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/btn2" />
 
     <Button
         android:id="@+id/btn2"
@@ -46,21 +46,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn1" />
+        app:layout_constraintTop_toBottomOf="@+id/btn3" />
 
     <Button
         android:id="@+id/btn3"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="260dp"
         android:backgroundTint="#6495ED"
         android:text="前額頭痛"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn2" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btn4"
@@ -74,7 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn3" />
+        app:layout_constraintTop_toBottomOf="@+id/btn1" />
 
     <Button
         android:id="@+id/btn5"
