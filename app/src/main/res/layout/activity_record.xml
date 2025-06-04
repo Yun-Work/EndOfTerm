@@ -66,8 +66,6 @@
 
 
     <!-- 長條圖表 -->
-
-    <!-- 每日紀錄列表 -->
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
         android:layout_width="408dp"
@@ -78,6 +76,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_picker" />
 
+    <!-- 無資料提示文字 -->
+    <TextView
+        android:id="@+id/text_no_data"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="本月份無任何症狀紀錄"
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/barChart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 每日紀錄列表 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_symptoms"
         android:layout_width="408dp"

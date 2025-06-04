@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,6 +29,7 @@ class RecordActivity : AppCompatActivity() {
     private lateinit var spinnerYear: Spinner
     private lateinit var spinnerMonth: Spinner
     private lateinit var recyclerView: RecyclerView
+    private lateinit var textNoData: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +43,8 @@ class RecordActivity : AppCompatActivity() {
         spinnerMonth = findViewById(R.id.spinner_month)
         barChart = findViewById(R.id.barChart)
         recyclerView = findViewById(R.id.recyclerView_symptoms)
+        textNoData = findViewById(R.id.text_no_data)
+
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         val yearList = (2020..2050).map { it.toString() }
@@ -103,7 +107,14 @@ class RecordActivity : AppCompatActivity() {
                     }
 
                     runOnUiThread {
-                        drawBarChart(list)
+                        if (list.isEmpty()) {
+                            barChart.clear()
+                            barChart.invalidate()
+                            textNoData.visibility = View.VISIBLE
+                        } else {
+                            textNoData.visibility = View.GONE
+                            drawBarChart(list)
+                        }
                     }
                 } else {
                     Log.e("RecordActivity", "GET summary 錯誤：${response.code}")
